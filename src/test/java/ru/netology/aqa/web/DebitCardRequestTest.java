@@ -10,7 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import ru.netology.aqa.utils.WebElementUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -57,10 +56,8 @@ public class DebitCardRequestTest {
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79051234567");
         form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        WebElement nameElement = form.findElement(By.cssSelector("[data-test-id=name]"));
-        assertTrue(WebElementUtils.hasClass(nameElement, "input_invalid"));
-        String formErrorHint = nameElement.findElement(By.className("input__sub")).getText();
-        assertEquals("Поле обязательно для заполнения", formErrorHint.trim());
+        WebElement errorHintElement = form.findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub"));
+        assertEquals("Поле обязательно для заполнения", errorHintElement.getText().trim());
     }
 
     @Test
@@ -70,11 +67,9 @@ public class DebitCardRequestTest {
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79051234567");
         form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        WebElement nameElement = form.findElement(By.cssSelector("[data-test-id=name]"));
-        assertTrue(WebElementUtils.hasClass(nameElement, "input_invalid"));
-        String formErrorHint = nameElement.findElement(By.className("input__sub")).getText();
+        WebElement errorHintElement = form.findElement(By.cssSelector("[data-test-id='name'].input_invalid .input__sub"));
         assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
-                formErrorHint.trim());
+                errorHintElement.getText().trim());
     }
 
     @Test
@@ -83,10 +78,8 @@ public class DebitCardRequestTest {
         form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Попова Анна-Мария");
         form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        WebElement phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
-        assertTrue(WebElementUtils.hasClass(phoneElement, "input_invalid"));
-        String formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
-        assertEquals("Поле обязательно для заполнения", formErrorHint.trim());
+        WebElement errorHintElement = form.findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub"));
+        assertEquals("Поле обязательно для заполнения", errorHintElement.getText().trim());
     }
 
     @Test
@@ -96,11 +89,9 @@ public class DebitCardRequestTest {
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("79051234567");
         form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        WebElement phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
-        assertTrue(WebElementUtils.hasClass(phoneElement, "input_invalid"));
-        String formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
+        WebElement errorHintElement = form.findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub"));
         assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
-                formErrorHint.trim());
+                errorHintElement.getText().trim());
     }
 
     @Test
@@ -137,11 +128,9 @@ public class DebitCardRequestTest {
     }
 
     private static void assertPhoneErrorHint(WebElement form) {
-        WebElement phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
-        assertTrue(WebElementUtils.hasClass(phoneElement, "input_invalid"));
-        String formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
+        WebElement errorHintElement = form.findElement(By.cssSelector("[data-test-id='phone'].input_invalid .input__sub"));
         assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
-                formErrorHint.trim());
+                errorHintElement.getText().trim());
     }
 
     @Test
@@ -150,7 +139,6 @@ public class DebitCardRequestTest {
         form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Попова Анна-Мария");
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79051234567");
         form.findElement(By.cssSelector("button")).click();
-        WebElement agreementElement = form.findElement(By.cssSelector("[data-test-id=agreement]"));
-        assertTrue(WebElementUtils.hasClass(agreementElement, "input_invalid"));
+        assertTrue(form.findElement(By.cssSelector("[data-test-id='agreement'].input_invalid")).isDisplayed());
     }
 }
