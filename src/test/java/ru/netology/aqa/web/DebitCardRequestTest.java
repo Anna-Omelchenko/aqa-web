@@ -90,7 +90,7 @@ public class DebitCardRequestTest {
     }
 
     @Test
-    void testPhoneFormat() {
+    void testPhoneMustStartWithPlusSign() {
         WebElement form = driver.findElement(By.className("form"));
         form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Попова Анна-Мария");
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("79051234567");
@@ -101,25 +101,45 @@ public class DebitCardRequestTest {
         String formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
         assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
                 formErrorHint.trim());
+    }
+
+    @Test
+    void testPhoneOf10DigitsInvalid() {
         // Verify that phone value of 10 digits is not valid
+        WebElement form = driver.findElement(By.className("form"));
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Попова Анна-Мария");
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+7905123456");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
-        formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
-                formErrorHint.trim());
+        assertPhoneErrorHint(form);
+    }
+
+    @Test
+    void testPhoneOf12DigitsInvalid() {
         // Verify that phone value of 12 digits is not valid
+        WebElement form = driver.findElement(By.className("form"));
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Попова Анна-Мария");
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+790512345670");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
-        formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
-                formErrorHint.trim());
+        assertPhoneErrorHint(form);
+    }
+
+    @Test
+    void testPhoneWithAlphabeticCharacterInvalid() {
         // Verify that phone value containing non-digit character is not valid
+        WebElement form = driver.findElement(By.className("form"));
+        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Попова Анна-Мария");
         form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79O51234567");
+        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         form.findElement(By.cssSelector("button")).click();
-        phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
-        formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
+        assertPhoneErrorHint(form);
+    }
+
+    private static void assertPhoneErrorHint(WebElement form) {
+        WebElement phoneElement = form.findElement(By.cssSelector("[data-test-id=phone]"));
+        assertTrue(WebElementUtils.hasClass(phoneElement, "input_invalid"));
+        String formErrorHint = phoneElement.findElement(By.className("input__sub")).getText();
         assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
                 formErrorHint.trim());
     }
